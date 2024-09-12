@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <input autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" placeholder="Search">
+
+    <ul class="list-group"></ul>
+
+    <script>
+        let input = document.querySelector('input');
+        input.addEventListener('input', async function() {
+            let response = await fetch('/query?q=' + input.value);
+            let results = await response.json();
+            let html = '';
+            for (let id in results) {
+                let title = results[id].toString().replace('<', '&lt;').replace('&', '&amp;');
+                html += '<li class="list-group-item">' + title + '</li>';
+            }
+            document.querySelector('ul').innerHTML = html;
+        });
+    </script>
+{% endblock %}

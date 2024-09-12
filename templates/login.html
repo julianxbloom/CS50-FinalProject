@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <h3 style="text-decoration: overline #e74c3c; text-decoration-thickness: 7%; margin-bottom: 7%">Log in</h3>
+    <div>
+        <form action="/login" method="post">
+            <div>
+                <input name="username" autofocus type="text" class="form-control mx-auto w-auto" style="margin-bottom: 5%" placeholder="Username">
+            </div>
+            <div>
+                <input name="password" autofocus type="password" class="form-control mx-auto w-auto" style="margin-bottom: 5%" placeholder="Password">
+            </div>
+            <button class="btn btn-secondary" type="submit" style="margin-bottom: 5%">Log in</button>
+            {% if error %}
+                <p style="color: red;">{{error}}</p>
+            {% else %}
+                <br><br>
+            {% endif %}
+        </form>
+        <div>
+            <p style="margin-bottom: 1%;"> You don't have an account?</p>
+            <a class="btn btn-link" href="/register" role="button">Register</a>
+        </div>
+    </div>
+{% endblock %}
