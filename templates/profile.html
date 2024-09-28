@@ -2,6 +2,22 @@
 
 {% block main %}
    <h3 style="text-decoration: overline #e74c3c; text-decoration-thickness: 7%; margin-bottom: 7%">{{username}}</h3>
-
-   <a class="btn btn-secondary" type="button" href="/settings"> Settings </a>
+   <h4 style="text-align: left; margin-bottom: 4vh; margin-left: 2vh;">My debates ({{debate_length}})</h4>
+   <ul class="list-group">
+      {% if debates == [] %}
+         <p>No debates to display.</p>
+      {% else %}
+         {% for debate in debates %}
+            <a href="/chat?q={{debate['id']}}" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">
+               <div style="font-weight: bold;">
+                  {{debate["text"]}}
+               </div>
+               <div>
+                  <p style="font-style: italic; display: inline;">{{debate["topic"]}}</p>{% if debate["locality"] != "None" %}, {{debate["locality"]}}{% endif %}
+               </div>
+            </a>
+         {% endfor %}
+      {% endif %}
+  </ul>
+   <a class="btn btn-primary" type="button" href="/settings" style="margin-top: 2vh; margin-bottom: 2vh;"> Settings </a>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block main %}
-    <input autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" placeholder="Search">
+    <input autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" style="margin-bottom: 4vh;" placeholder="Search">
 
-    <ul class="list-group"></ul>
+    <ul class="list-group" style="background-color: #f5f5dc"></ul>
 
     <script>
         let input = document.querySelector('input');
@@ -12,8 +12,17 @@
             let results = await response.json();
             let html = '';
             for (let id in results) {
-                let title = results[id].toString().replace('<', '&lt;').replace('&', '&amp;');
-                html += '<li class="list-group-item">' + title + '</li>';
+                let debateId = results[id][0]
+                let debateText = results[id][1].toString().replace('<', '&lt;').replace('&', '&amp;');
+                let debateTopic = results[id][2].toString()
+                let debateLocality = results[id][3].toString()
+                html += '<a href="/chat?q=' + debateId + '" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">' 
+                        + '<div style="font-weight: bold;">' + debateText + '</div><div><p style="font-style: italic; display: inline;">' + debateTopic
+                        + '</p>{% if' + debateLocality + '!= "None" %}, ' + debateLocality + '{% endif %}</div>' +
+                        '</a>';
+            }
+            if (html == '' &&  input.value != '') {
+                html += '<p style="margin-top: 5%; background-color: #f5f5dc">No results</p>';
             }
             document.querySelector('ul').innerHTML = html;
         });

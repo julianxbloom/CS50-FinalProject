@@ -16,9 +16,13 @@
             {% endfor %}
         </select>
         <div class="mx-auto" style="margin-bottom: 5%; height: 150px; width: 80%; max-width: 350px;">
-            <textarea name="debateText" autofocus autocomplete="off" spellcheck="false" maxlength="100" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Debate teaser"></textarea>
+            <textarea name="debateText" autofocus autocomplete="off" spellcheck="false" maxlength="100" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Debate teaser">
+                {% if teaser %}
+                    {{teaser}}
+                {% endif %}
+            </textarea>
         </div>
-        <button class="btn btn-secondary" type="submit" style="margin-bottom: 5%">Create</button>
+        <button class="btn btn-primary" type="submit" style="margin-bottom: 5%">Create</button>
         {% if error %}
             <p style="color: red;">{{error}}</p>
         {% endif %}

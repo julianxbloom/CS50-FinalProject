@@ -38,27 +38,25 @@
         <main class="container py-5 text-center">
             {% block main %}{% endblock %}
         </main>
-        <div class="container text-center">
+        <div class="container text-center" style="background-color: #f5f5dc">
             {% if session["user_id"] %}
-                <nav class="navbar navbar-light bg-light">
-                    <div class="appNavbar">
-                        <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-right: 5%;" href="/">
-                            <img src="static/icons/home.png" alt="index" width="30" height="24">
-                        </a>
-                        <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/search">
-                            <img src="static/icons/search.png" alt="search" width="30" height="24">
-                        </a>
-                        <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/create">
-                            <img src="static/icons/create.png" alt="create" width="30" height="24">
-                        </a>
-                        <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/my-debates">
-                            <img src="static/icons/icon.png" alt="my-debates" width="30" height="24">
-                        </a>
-                        <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%;" href="/profile">
-                            <img src="static/icons/icon.png" alt="profile" width="30" height="24">
-                        </a>
-                    </div>
-                </nav>
+                <div class="appNavbar">
+                    <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-right: 5%;" href="/">
+                        <img src="static/icons/home.png" alt="index" width="30" height="24">
+                    </a>
+                    <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/search">
+                        <img src="static/icons/search.png" alt="search" width="30" height="24">
+                    </a>
+                    <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/create">
+                        <img src="static/icons/create.png" alt="create" width="30" height="24">
+                    </a>
+                    <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%;" href="/active-debates">
+                        <img src="static/icons/chat.png" alt="active-debates" width="30" height="24">
+                    </a>
+                    <a class="navbarIcon" style="margin-left: auto; margin-right: auto; padding-left: 5%;" href="/profile">
+                        <img src="static/icons/icon.png" alt="profile" width="30" height="24">
+                    </a>
+                </div>
             {% endif %}
         </div>
         

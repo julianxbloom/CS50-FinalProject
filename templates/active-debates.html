@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <h3 style="margin-bottom: 4vh;">Active debates</h3>
+    <ul class="list-group">
+        {% if debates == [] %}
+            <p>No debates to display.</p>
+        {% else %}
+            {% for debate in debates %}
+                <a href="/chat?q={{debate['id']}}" class="list-group-item list-group-item-action" style="margin-bottom: 1vh;">
+                    <div style="font-weight: bold;">
+                        {{debate["text"]}}
+                     </div>
+                     <div>
+                        <p style="font-style: italic; display: inline;">{{debate["topic"]}}</p>{% if debate["locality"] != "None" %}, {{debate["locality"]}}{% endif %}
+                     </div>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% endblock %}

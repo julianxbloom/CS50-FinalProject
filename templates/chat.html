@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <div class="arrow">
+        <a onclick="history.go(-1)">
+            <img src="static/icons/arrow.png" alt="index" width="28" height="28">
+        </a>
+    </div>
+    <div>
+        <p>{{debate_text}}</p>
+    </div>
+    <div class="chatbox">
+        <div id="chatscroll" class="chatscroll">
+            {% for chat in chats %}
+                {% if chat[0] == session_id %}
+                    <section style="margin-left: auto; margin-right: 1vh;">
+                        {{chat[1]}}
+                    </section>
+                {% else %}
+                    <section style="margin-left: 1vh; margin-right: auto;">
+                        {{chat[2]}}
+                    </section>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <form action="/chat?q={{debate_id}}" method="post">
+            <div class="messageTyping">
+                <input name="message" autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" placeholder="Message..">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var objDiv = document.getElementById("chatscroll");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    </script>
+    
+{% endblock %}
