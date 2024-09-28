@@ -1,11 +1,12 @@
 body {
-  background-color: #ecf0f1;
+  background-color: #f5f5dc;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 
     "Noto Color Emoji";
 }
 
 
+/* menu scroller */
 .scroller {
   top: 0vh;
   border-radius: 20px;
@@ -16,7 +17,8 @@ body {
 .scroller section {
   height: 80vh;
   margin-bottom: 2vh;
-  background-color: #eae4dd;
+  /*background-color: #eae4dd;*/
+  background-color: #f5f5dc;
   border-radius: 20px;
   border: 3px solid #c2b8ac;
   scroll-snap-align: start;
@@ -30,7 +32,7 @@ body {
   bottom: 0%;
   left: 0%;
   z-index: 1;
-  background-color: #2C3E50;
+  background-color: #131f2f;
   width: 100%;
   height: 8vh;
   padding: auto;
@@ -38,4 +40,45 @@ body {
 .navbarIcon {
   position: relative;
   top: 20%;
+}
+
+
+/* go-back arrow */
+.arrow {
+  position: relative
+}
+.arrow img {
+  position: absolute;
+  top: 0vh;
+  left: 0vh;
+}
+
+
+/* chat display */
+.chatbox {
+  width: 100%;
+  height: 76vh;
+  background-color: #C99C86;
+}
+.chatscroll {
+  height: 67vh;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  flex-direction: column-reverse;
+}
+.chatscroll section {
+  background-color: chartreuse;
+  min-height: 6vh;
+  border-radius: 15px;
+  margin-top: 1.5vh;
+  margin-bottom: 1.5vh;
+  width: 30vh
+}
+.messageTyping {
+  background-color: blueviolet;
+  margin-bottom: 0vh;
+  margin-top: auto;
+  height: 9vh;
+  display: flex;
+  align-items: center;
 }
