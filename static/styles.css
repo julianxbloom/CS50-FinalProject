@@ -1,12 +1,12 @@
 body {
-  background-color: #f5f5dc;
+  background-color: #f7f7e7;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 
     "Noto Color Emoji";
 }
 
 
-/* menu scroller */
+/* main menu scroller */
 .scroller {
   top: 0vh;
   border-radius: 20px;
@@ -17,16 +17,14 @@ body {
 .scroller section {
   height: 80vh;
   margin-bottom: 2vh;
-  /*background-color: #eae4dd;*/
   background-color: #f5f5dc;
   border-radius: 20px;
-  border: 3px solid #c2b8ac;
+  border: 3px solid #131f2f;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  word-break: break-word;
 }
 
-
-/* app navbar */
 .appNavbar {
   position: fixed;
   bottom: 0%;
@@ -39,46 +37,182 @@ body {
 }
 .navbarIcon {
   position: relative;
-  top: 20%;
+  top: 27%;
 }
 
 
 /* go-back arrow */
-.arrow {
-  position: relative
-}
 .arrow img {
   position: absolute;
-  top: 0vh;
-  left: 0vh;
+  top: 3vh;
+  left: 6vw;
 }
 
 
 /* chat display */
 .chatbox {
   width: 100%;
-  height: 76vh;
-  background-color: #C99C86;
+  height: 70vh;
+  background-color: #fafae0;
+  margin-top: 9vh
 }
 .chatscroll {
-  height: 67vh;
+  height: 66vh;
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
   flex-direction: column-reverse;
 }
 .chatscroll section {
-  background-color: chartreuse;
   min-height: 6vh;
   border-radius: 15px;
   margin-top: 1.5vh;
-  margin-bottom: 1.5vh;
   width: 30vh
 }
-.messageTyping {
-  background-color: blueviolet;
-  margin-bottom: 0vh;
-  margin-top: auto;
+.chatscroll section p {
+  margin-bottom: 0;
+}
+
+.self-chat {
+  margin-left: auto;
+  margin-right: 1vh;
+  word-break: break-word;
+  background-color: #6a84d4
+}
+.peer-chat {
+  margin-left: 1vh;
+  margin-right: auto;
+  word-break: break-word;
+  background-color: #a5b0c4
+}
+.chat-sender {
+  display: flex;
+  font-style: italic;
+  font-size: 4vw;
+  margin-right: auto;
+}
+
+.chatTitle {
+  background-color: #cccdff;
+  border: 3px double #2d496e;
+  word-break: break-word;
+  font-weight: bold;
+  font-size: 2vh;
+  position: fixed;
+  width: 90%;
   height: 9vh;
+  margin-top: 0.5vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.messageTyping {
+  background-color: #415487;
+  bottom: 8vh;
+  left:0vh;
+  height: 9vh;
+  width: 100%;
+  position: fixed;
   display: flex;
   align-items: center;
+}
+
+
+/* Rating item */
+:root {
+  --rating-size: 6rem;
+  --bar-size: 0.7rem;
+  --background-color: #e7f2fa;
+  --rating-color-default: #2980b9;
+  --rating-color-background: #b8d4e7;
+  --rating-color-good: #27ae60;
+  --rating-color-ok: #f1c40f;
+  --rating-color-bad: #e74c3c;
+  --rating-color-suspended: #000000;
+}
+
+.rating {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  overflow: hidden;
+  
+  background: var(--rating-color-default);
+  color: var(--rating-color-default);
+  width: var(--rating-size);
+  height: var(--rating-size);
+
+  font-size: calc(var(--rating-size) / 3);
+  line-height: 1;
+}
+
+.rating body {
+  background: var(--background-color);
+  font: 16px/1 Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--rating-size), var(--rating-size))
+  );
+  gap: var(--bar-size);
+  justify-content: start;
+  padding: var(--bar-size);
+}
+
+/* Rating circle content */
+.rating span {
+  position: relative;
+  display: flex;
+  font-weight: bold;
+  z-index: 2;
+}
+.rating span small {
+  font-size: 0.5em;
+  font-weight: 900;
+  align-self: center;
+}
+
+
+.rating::after {
+  content: "";
+  position: absolute;
+  inset: var(--bar-size);
+  background: var(--background-color);
+  border-radius: inherit;
+  z-index: 1;
+}
+.rating::before {
+  content: "";
+  position: absolute;
+  inset: var(--bar-size);
+  border-radius: inherit;
+  box-shadow: 0 0 0 1rem var(--rating-color-background);
+  z-index: -1;
+}
+
+
+.rating.good {
+  background: var(--rating-color-good);
+  color: var(--rating-color-good);
+}
+.rating.ok {
+  background: var(--rating-color-ok);
+  color: var(--rating-color-ok);
+}
+.rating.bad {
+  background: var(--rating-color-bad);
+  color: var(--rating-color-bad);
+}
+.rating.suspended {
+  background: var(--rating-color-suspended);
+  color: var(--rating-color-suspended);
+}
+
+
+.trust-score-table {
+  background-color: white;
+  border: 0.3vw solid #d8d8d8;
 }
