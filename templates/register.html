@@ -5,7 +5,7 @@
     <div>
         <form action="/register" method="post">
             <div>
-                <input name="username" autofocus type="text" class="form-control mx-auto w-auto" style="margin-bottom: 5%" placeholder="Username">
+                <input name="username" autofocus type="text" class="form-control mx-auto w-auto" style="margin-bottom: 5%" maxlength="15" placeholder="Username">
             </div>
             <select name="country" class="custom-select" style="margin-bottom: 5%; width: 60%; max-width: 300px;">
                 <option selected disabled>Country</option>
@@ -14,10 +14,10 @@
                 {% endfor %}
             </select>
             <div>
-                <input name="password" autofocus type="password" class="form-control mx-auto w-auto" style="margin-bottom: 5%" placeholder="Password">
+                <input name="password" autofocus type="password" class="form-control mx-auto w-auto" style="margin-bottom: 5%" maxlength="20" placeholder="Password">
             </div>
             <div>
-                <input name="confirmation" autofocus type="password" class="form-control mx-auto w-auto" style="margin-bottom: 5%" placeholder="Confirm password">
+                <input name="confirmation" autofocus type="password" class="form-control mx-auto w-auto" style="margin-bottom: 5%" maxlength="20" placeholder="Confirm password">
             </div>
             <button class="btn btn-primary" type="submit" style="margin-bottom: 5%"> Register </button>
             {% if error %}
@@ -28,7 +28,7 @@
         </form>
         <div>
             <p style="margin-bottom: 1%;"> You already have an account?</p>
-            <a class="btn btn-link" href="/login" role="button">Log in</a>
+            <a class="btn btn-link" style="text-decoration: underline;" href="/login" role="button">Log in</a>
         </div>
     </div>
 {% endblock %}

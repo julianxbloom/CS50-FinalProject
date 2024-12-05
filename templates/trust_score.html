@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block main %}
+   <div class="arrow">
+      <a onclick="history.back()">
+         <img src="static/icons/arrow.png" width="28" height="28">
+      </a>
+   </div>
+   <h4>What is Trust Score?</h4>
+   <div style="margin-top: 3.5vh;">
+      <p class="list-group-item">
+         <b>Trust Score</b> is what keeps Debate.'s environment healthy. It reflects how trusful of a debater you are. Lower it gets, heavier will be the consequences. 
+         <br> By default, you own 75 points.
+         <br> If your score got lower, you can regain trust if you behave well for a certain period of time.
+      </p>
+   </div>
+
+   <p>Here is a quick preview: </p>
+
+   <table class="trust-score-table" style="margin-bottom: 5vh;">
+      <tr>
+        <td><img src="static/icons/trust_score_arrow.png" width="35" height="53" style="margin-left: 4vw; margin-top: 2vh;"></td>
+        <td><p style="display: inline; color: #27ae60; text-decoration: underline; font-weight: bold;">Green:</p><p style="display: inline;"> an exemplary debater!</p></td>
+      </tr>
+      <tr>
+        <td><p style="margin-top: 2vh; font-size: 3.5vh; margin-left: 4vw;">70</p></td>
+        <td>- - - - - - - - - -</td>
+      </tr>
+      <tr>
+        <td><img src="static/icons/trust_score_arrow.png" width="35" height="53" style="margin-left: 4vw;"></td>
+        <td><p style="display: inline; color: #f1c40f; text-decoration: underline; margin-left: 4vw; font-weight: bold;">Yellow:</p><p style="display: inline;"> a debater that should care a bit more about their words</p></td>
+      </tr>
+      <tr>
+        <td><p style="margin-top: 2vh; font-size: 3.5vh; margin-left: 4vw;">40</p></td>
+        <td>- - - - - - - - - -</td>
+      </tr>
+      <tr>
+        <td><img src="static/icons/trust_score_arrow.png" width="35" height="53" style="margin-left: 4vw;"></td>
+        <td> <p style="display: inline; color: #e74c3c; text-decoration: underline; margin-left: 4vw; font-weight: bold;">Red:</p><p style="display: inline;"> next bad behaviour and this debater is out!</p></td>
+      </tr>
+      <tr>
+        <td><p style="margin-top: 2vh; font-size: 3.5vh; margin-left: 4vw;">20</p></td>
+        <td>- - - - - - - - - -</td>
+      </tr>
+      <tr>
+        <td><img src="static/icons/trust_score_arrow.png" width="35" height="53" style="margin-left: 4vw; margin-bottom: 2vh;"></td>
+        <td><p style="display: inline; color: #000000; text-decoration: underline; margin-left: 4vw; font-weight: bold;">Black:</p><p style="display: inline;"> account temporarily suspended</p></td>
+      </tr>
+    </table>
+{% endblock %}

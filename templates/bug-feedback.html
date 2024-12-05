@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <div class="arrow">
+        <a onclick="history.back()">
+        <img src="static/icons/arrow.png" width="28" height="28">
+        </a>
+    </div>
+    <h4>Report request</h4>
+    <form action="/bug-feedback" method="post">
+        <select name="bug-category" class="custom-select" style="margin-top: 2vh; width: 60vw;">
+            <option selected disabled>Category</option>
+            {% for category in bug_categories %}
+                <option value="{{category}}">{{category}}</option>
+            {% endfor %}
+        </select>
+        {% if bug_description == "" %}
+            <div class="mx-auto" style="margin-top: 5vh; height: 40vh; width: 80vw; max-width: 350px;">
+                <textarea name="bug-description" autofocus autocomplete="off" spellcheck="false" maxlength="2000" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Please write a few words to describe the bug."></textarea>
+            </div>
+        {% else %}
+            <div class="mx-auto" style="margin-top: 5vh; height: 40vh; width: 80vw; max-width: 350px;">
+                <textarea name="bug-description" autofocus autocomplete="off" spellcheck="false" maxlength="2000" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Please write a few words to describe the bug.">{{bug_description}}</textarea>
+            </div>
+        {% endif %}
+
+        <button class="btn btn-primary" type="submit" style="margin-top: 2vh">Send</button>
+        {% if error %}
+        <p style="color: red;">{{error}}</p>
+        {% endif %}
+    </form>
+{% endblock %}

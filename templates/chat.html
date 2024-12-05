@@ -1,38 +1,96 @@
 {% extends "layout.html" %}
 
 {% block main %}
-    <div class="arrow">
-        <a onclick="history.go(-1)">
-            <img src="static/icons/arrow.png" alt="index" width="28" height="28">
-        </a>
+<div class="arrow">
+    <a onclick="history.back()">
+        <img src="static/icons/arrow.png" width="28" height="28">
+    </a>
+    <div class="btn-group dropstart" style="position: absolute; top: 1vh; right: 4vw">
+        <button class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: larger; font-weight: bold">...</button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/profile?username={{debate_creator}}">Creator's profile</a></li>
+            <li><a class="dropdown-item" href="/delete?debate_id={{room_id}}">Delete or leave</a></li>
+        </ul>
     </div>
-    <div>
-        <p>{{debate_text}}</p>
-    </div>
-    <div class="chatbox">
-        <div id="chatscroll" class="chatscroll">
-            {% for chat in chats %}
-                {% if chat[0] == session_id %}
-                    <section style="margin-left: auto; margin-right: 1vh;">
-                        {{chat[1]}}
-                    </section>
-                {% else %}
-                    <section style="margin-left: 1vh; margin-right: auto;">
-                        {{chat[2]}}
-                    </section>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <form action="/chat?q={{debate_id}}" method="post">
-            <div class="messageTyping">
-                <input name="message" autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" placeholder="Message..">
-            </div>
-        </form>
-    </div>
+</div>
 
-    <script>
+<div class="chatTitle">
+    <p>{{debate_text}}</p>
+</div>
+
+<div class="messageTyping">
+    <input
+    name="message"
+    id="message-input"
+    type="text"
+    autocomplete="off"
+    autofocus
+    class="form-control"
+    style="margin-left: 6vw; width: 77vw;"
+    size="20"
+    placeholder="Message.."
+    />
+
+    <img alt="send-icon" src="static/icons/send_icon.png" id="send-btn" width="30" height="24" style="position: absolute; right: 0vw; margin-right: 6vw;" onclick="sendMessage()">
+</div>
+
+
+<div class="chatbox">
+    <div id="chatscroll" class="chatscroll"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+
+    socket.on('message', function (message) {
+        createChatItem(message.message, message.sender);
         var objDiv = document.getElementById("chatscroll");
         objDiv.scrollTop = objDiv.scrollHeight;
+    });
+
+
+    function createChatItem(message, sender) {
+        var messages = document.getElementById("chatscroll");
+
+        if (sender === "") {
+            content = `
+                <p>${message}</p>
+            `;
+        } else {
+            var senderIsUser = "{{username}}" === sender;
+            var content = `
+                <section class=" ${
+                    senderIsUser ? "self-chat" : "peer-chat"
+                }">
+                    <p style="margin-left: 1.5vh; margin-right: 1.5vh; text-align: left;">${message}</p>
+                </section>
+                <div class="chat-sender" style="${senderIsUser ? "justify-content: right; margin-right: 5vw; margin-left: auto;" : "justify-content: left; margin-left: 5vw;"
+                }"><a href="/profile?username=${sender}" style="margin-bottom: 1.5vh">${sender}</a></div>
+            `;
+        }
+
+        messages.innerHTML += content
+    }
+
+
+    function sendMessage() {
+        var msgInput = document.getElementById("message-input");
+        if (msgInput.value === "") return;
+
+        var msg = msgInput.value;
+        socket.emit('message', { message: msg });
+        msgInput.value = "";
+    }
+</script>
+{% for chat in chats %}
+    <script type="text/javascript">
+        createChatItem("{{chat.message}}", "{{chat.sender}}");
     </script>
-    
+{% endfor %}
+<script>
+    var objDiv = document.getElementById("chatscroll");
+    objDiv.scrollTop = objDiv.scrollHeight;
+</script>
+
 {% endblock %}

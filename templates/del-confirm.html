@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <form action="/del-account" method="post">
+        <div style="margin-top: 20vh;">
+            <p style="font-weight: bold;">Are you sure you want to delete your account?</p>
+            <p style="margin-top: 1vh; margin-bottom: 4vh; font-style: italic;">We will miss you..</p>
+            <a class="btn btn-primary" type="button" style="margin-right: 1vh;" href="/profile">Cancel</a>
+            <button class="btn btn-danger" type="submit" style="margin-left: 1vh;">Delete Account</button>
+        </div>
+    </form>
+{% endblock %}

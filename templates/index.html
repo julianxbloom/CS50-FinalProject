@@ -3,21 +3,40 @@
 {% block main %}
     <article class="scroller">
         {% if debates == [] %}
-         <p>ERROR: no debates to display.</p>
+         <p style="margin-top: 30vh;">No more debates to display.</p>
+         <a class="btn btn-primary" style="margin-bottom: 5%" href="/data-update?debates={{debates}}">Refresh</a>
         {% else %}
             {% for debate in debates %}
-                <section>
-                    <h2>{{debate["text"]}}</h2>
-                    <p>{{debate["topic"]}}</p>
-                    <p>{{debate["creator"]}}</p>
-                    {% if debate["locality"] %}
-                        <p>{{debate["locality"]}}</p>
-                    {% else %}
-                        <p></p>
-                    {% endif %}
-                    <a href="/chat?q={{debate['id']}}" class="btn btn-primary">Participate</a>
+                <section id="{{debate['id']}}" style="position: relative;">
+                    <div style="margin-bottom: 2vh; margin-top: 1vh; text-align: left; margin-left: 2vh; font-size: 5vh; font-weight: bold;">
+                        {{debate["text"]}}
+                    </div>
+                    <div style="text-align: left; margin-left: 3vh; font-size: 3vh;">
+                        {% if debate["locality"] == 'None' %}
+                            <p style="font-style: italic;">{{debate["topic"]}}, no locality</p>
+                        {% else %}
+                            <p style="font-style: italic;">{{debate["topic"]}}, {{debate["locality"]}}</p>
+                        {% endif %}
+                        
+                        {% if debate["participants"] == 0 %}
+                            <p>No participants</p>
+                        {% elif debate["participants"] == 1 %}
+                            <p>1 participant</p>
+                        {% else %}
+                            <p>{{debate["participants"]}} participants</p>
+                        {% endif %}
+                    </div>
+                    <div style="position: absolute; width: 100%; justify-content: center; bottom: 12vh">
+                        <a href="/chat?q={{debate['id']}}" class="btn btn-primary" style="font-size: 3.5vh;">Participate</a>
+                    </div>
+                    <div style="position: absolute; width: 100%; text-align: center; bottom: 1vh">
+                        <p style="font-size: 2.5vh;">Created by <a href="/profile?username={{debate['creator']}}" style="font-weight: bold;">{{debate["creator"]}}</a></p>
+                    </div>
                 </section>
             {% endfor %}
+            <section style="position: relative;">
+                <a class="btn btn-primary" style="margin-top: 30vh; font-size: large;" href="/data-update?debates={{debates}}">More debates</a>
+            </section>
         {% endif %}
     </article>
 {% endblock %}

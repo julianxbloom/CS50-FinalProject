@@ -1,5 +1,21 @@
 {% extends "layout.html" %}
 
 {% block main %}
-   <a class="btn btn-primary" type="button" href="/logout"> Log out </a>
+   <div class="arrow">
+      <a onclick="history.back()">
+         <img src="static/icons/arrow.png" width="28" height="28">
+      </a>
+   </div>
+   <h3>Settings</h3>
+   <div style="margin-top: 5vh; margin-bottom: 2.5vh;">
+      <a class="btn btn-success" type="button" href="/bug-feedback">Bug feedback</a>
+   </div>
+   <div style="margin-bottom: 2.5vh;">
+      <a class="btn btn-primary" type="button" href="/logout">Log out </a>
+   </div>
+   <div>
+      <a class="btn btn-danger" type="button" href="/del-account">Delete Account</a>
+   </div>
+   
+   
 {% endblock %}

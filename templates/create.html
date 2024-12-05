@@ -15,13 +15,15 @@
                 <option value={{locality}}>{{locality}}</option>
             {% endfor %}
         </select>
-        <div class="mx-auto" style="margin-bottom: 5%; height: 150px; width: 80%; max-width: 350px;">
-            <textarea name="debateText" autofocus autocomplete="off" spellcheck="false" maxlength="100" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Debate teaser">
-                {% if teaser %}
-                    {{teaser}}
-                {% endif %}
-            </textarea>
-        </div>
+        {% if teaser == "" %}
+            <div class="mx-auto" style="margin-bottom: 5%; height: 150px; width: 80%; max-width: 350px;">
+                <textarea name="debateText" autofocus autocomplete="off" spellcheck="false" maxlength="65" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Debate teaser"></textarea>
+            </div>
+        {% else %}
+            <div class="mx-auto" style="margin-bottom: 5%; height: 150px; width: 80%; max-width: 350px;">
+                <textarea name="debateText" autofocus autocomplete="off" spellcheck="false" maxlength="65" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Debate teaser">{{teaser}}</textarea>
+            </div>
+        {% endif %}
         <button class="btn btn-primary" type="submit" style="margin-bottom: 5%">Create</button>
         {% if error %}
             <p style="color: red;">{{error}}</p>

@@ -3,9 +3,23 @@
 {% block main %}
     <input autofocus autocomplete="off" type="text" class="form-control mx-auto w-auto" style="margin-bottom: 4vh;" placeholder="Search">
 
-    <ul class="list-group" style="background-color: #f5f5dc"></ul>
+    <ul class="list-group" style="background-color: #f7f7e7"></ul>
 
     <script>
+        document.querySelector('ul').innerHTML = `<h5 style="margin-bottom: 2vh;">Popular debates</h5>
+            {% for debate in popular_debates %}
+                <a href="/chat?q={{debate['debate_id']}}" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">
+                    <div style="font-weight: bold; word-break: break-word">{{debate['debateText']}}</div>
+                    <div>
+                        <p style="font-style: italic; display: inline;">{{debate['debateTopic']}}</p>
+                        {% if debate['locality'] != "None" %}
+                            , {{debate['locality']}}
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+            `;
+
         let input = document.querySelector('input');
         input.addEventListener('input', async function() {
             let response = await fetch('/query?q=' + input.value);
@@ -17,12 +31,27 @@
                 let debateTopic = results[id][2].toString()
                 let debateLocality = results[id][3].toString()
                 html += '<a href="/chat?q=' + debateId + '" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">' 
-                        + '<div style="font-weight: bold;">' + debateText + '</div><div><p style="font-style: italic; display: inline;">' + debateTopic
+                        + '<div style="font-weight: bold; word-break: break-word;">' + debateText + '</div><div><p style="font-style: italic; display: inline;">' + debateTopic
                         + '</p>{% if' + debateLocality + '!= "None" %}, ' + debateLocality + '{% endif %}</div>' +
                         '</a>';
             }
             if (html == '' &&  input.value != '') {
-                html += '<p style="margin-top: 5%; background-color: #f5f5dc">No results</p>';
+                html += '<p style="margin-top: 5%; background-color: #f7f7e7">No results</p>';
+            }
+            else if (html == '' && input.value == '') {
+                html += `<h5 style="margin-bottom: 2vh;">Popular debates</h5>
+            {% for debate in popular_debates %}
+                <a href="/chat?q={{debate['debate_id']}}" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">
+                    <div style="font-weight: bold; word-break: break-word">{{debate['debateText']}}</div>
+                    <div>
+                        <p style="font-style: italic; display: inline;">{{debate['debateTopic']}}</p>
+                        {% if debate['locality'] != "None" %}
+                            , {{debate['locality']}}
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+            `;
             }
             document.querySelector('ul').innerHTML = html;
         });

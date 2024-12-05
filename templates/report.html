@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block main %}
+   <div class="arrow">
+      <a onclick="history.back()">
+         <img src="static/icons/arrow.png" width="28" height="28">
+      </a>
+   </div>
+   <h4>Report request</h4>
+   <form action="/report?username={{user_to_report}}" method="post">
+      <div class="mx-auto" style="margin-top: 5vh; height: 40vh; width: 80vw; max-width: 350px;">
+         <textarea name="report-text" autofocus autocomplete="off" spellcheck="false" maxlength="300" rows="2" cols="50" class="form-control" style="width: 100%; height: 100%;" placeholder="Describe the reason(s) of your report request"></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit" style="margin-top: 2vh">Send</button>
+      {% if error %}
+         <p style="color: red;">{{error}}</p>
+      {% endif %}
+   </form>
+{% endblock %}

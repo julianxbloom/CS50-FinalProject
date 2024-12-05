@@ -1,15 +1,49 @@
 {% extends "layout.html" %}
 
 {% block main %}
-   <h3 style="text-decoration: overline #e74c3c; text-decoration-thickness: 7%; margin-bottom: 7%">{{username}}</h3>
-   <h4 style="text-align: left; margin-bottom: 4vh; margin-left: 2vh;">My debates ({{debate_length}})</h4>
+   <div class="arrow">
+      <a onclick="history.back()">
+         <img src="static/icons/arrow.png" width="28" height="28">
+      </a>
+   </div>
+   <h3 style="font-weight: bold; margin-bottom: 1vh">{{username}}</h3>
+
+   {% if username == session_username %}
+         <a type="button" href="/settings">
+            <img src="static/icons/settings_icon.png" style="position: absolute; top: 3vh; right: 6vw;" width="32" height="32">
+         </a>
+      <div class="list-group-item" style="display: flex; z-index: 1; margin-bottom: 3vh">
+         <div id="trust-score-display" class="rating" style="flex: 50vw;">{{trust_score}}</div>
+         <div style="flex: 50vw;">
+            <h4 style="margin-top: 2.5vh; margin-bottom: 1vh">My Trust Score</h4>
+            <a href="/trust-score" style="text-decoration: underline">Learn More</a>
+         </div>
+      </div>
+      <h4 style="text-align: left; margin-bottom: 4vh; margin-left: 2vh;">My debates ({{debate_length}})</h4>
+   
+   {% else %}
+      <div>
+         <a type="button" href="/report?username={{username}}">
+            <img src="static/icons/report.png" style="position: absolute; top: 3vh; right: 6vw;" width="32" height="32">
+         </a>
+      </div>
+      <div class="list-group-item" style="display: flex; z-index: 1; margin-bottom: 3vh">
+         <div id="trust-score-display" class="rating" style="flex: 50vw;">{{trust_score}}</div>
+         <div style="flex: 50vw;">
+            <h4 style="margin-top: 2.5vh; margin-bottom: 1vh">Trust Score</h4>
+            <a href="/trust-score" style="text-decoration: underline;">Learn More</a>
+         </div>
+      </div>
+      <h4 style="text-align: left; margin-bottom: 4vh; margin-left: 2vh;">Created debates ({{debate_length}})</h4>
+   {% endif %}
+
    <ul class="list-group">
       {% if debates == [] %}
-         <p>No debates to display.</p>
+         <p style="margin-top: 9vh;">No debates to display.</p>
       {% else %}
          {% for debate in debates %}
             <a href="/chat?q={{debate['id']}}" class="list-group-item list-group-item-action" style="margin-bottom: 1vh">
-               <div style="font-weight: bold;">
+               <div style="font-weight: bold; word-break: break-word;">
                   {{debate["text"]}}
                </div>
                <div>
@@ -19,5 +53,34 @@
          {% endfor %}
       {% endif %}
   </ul>
-   <a class="btn btn-primary" type="button" href="/settings" style="margin-top: 2vh; margin-bottom: 2vh;"> Settings </a>
+
+  <script>
+   const rating = document.getElementById("trust-score-display");
+
+   // Get content and get score as an int
+   const ratingContent = rating.innerHTML;
+   const ratingScore = parseInt(ratingContent, 10);
+
+   // Define if the score is good, meh or bad according to its value
+   const scoreClass =
+   ratingScore < 20 ? "suspended" : ratingScore < 40 ? "bad" : ratingScore < 70 ? "ok" : "good";
+
+   // Add score class to the rating
+   rating.classList.add(scoreClass);
+
+   // After adding the class, get its color
+   const ratingColor = window.getComputedStyle(rating).backgroundColor;
+
+   // Define the background gradient according to the score and color
+   const gradient = `background: conic-gradient(${ratingColor} ${ratingScore}%, transparent 0 100%)`;
+
+   // Set the gradient as the rating background
+   rating.setAttribute("style", gradient);
+
+   // Wrap the content in a tag to show it above the pseudo element that masks the bar
+   rating.innerHTML = `<span>${ratingScore} ${
+      ratingContent.indexOf("%") >= 0 ? "<small>%</small>" : ""
+   }</span>`;
+
+  </script>
 {% endblock %}
