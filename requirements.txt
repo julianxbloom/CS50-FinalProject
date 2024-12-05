@@ -1,5 +1,5 @@
 flask
 flask_session
+flask_socketio
 waitress
-sqlite3
-#functools
+argon2 #vérifier si c'est bien argon2 ou argon2-cffi

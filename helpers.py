@@ -1,5 +1,10 @@
+import sqlite3
 from flask import redirect, session
 from functools import wraps
+import argon2
+
+
+    # Fuctions
 
 def login_required(f):
 
@@ -12,28 +17,70 @@ def login_required(f):
     return decorated_function
 
 
+def get_data(past_debates=[]) -> list[dict]:
+    past_ids = tuple([debate['id'] for debate in past_debates])
+    
+    with sqlite3.connect("static/debate.db") as con:
+        cur = con.cursor()
+        
+        cur.execute("SELECT debate_id FROM participants WHERE user_id=?", [session["user_id"]])
+        data = cur.fetchall()
+        participating = tuple([ele[0] for ele in data])
+        
+        try:
+            query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>? AND id NOT IN {} AND id NOT IN {} LIMIT 50".format(past_ids, participating)
+            cur.execute(query, [session["user_id"]])
+        except sqlite3.OperationalError:
+            return []
+        data = cur.fetchall()
+        
+        debates = []
+        n = len(data)
+        for i in range(n):
+            cur.execute("SELECT username FROM users WHERE id=?", [data[i][1]])
+            username = cur.fetchall()[0][0]
+
+            cur.execute("SELECT COUNT(id) FROM participants WHERE debate_id=?", [data[i][0]])
+            participants = cur.fetchall()[0][0]
+            
+            debates.append({"id": data[i][0], "text": data[i][2], "topic": data[i][3], "creator": username, "locality": data[i][4], "participants": participants})
+
+    return debates
+
+
+def hash_password(password: str):
+    return argon2.PasswordHasher().hash(password)
+
+
+def verify_password(hash: str | bytes, password: str) -> bool:
+    try:
+        verify = argon2.PasswordHasher().verify(hash=hash, password=password)
+        return True
+    except argon2.exceptions.VerifyMismatchError:
+        return False
+
+
+
+    # Variables
+
+bug_categories = ['Debate scrolling', 'Search', 'Debate creation', 'Chatting', 'Profile / trust score', 'Other']
+
 topics = [
     "Politics", "Social", "Economics", "Education", "Health", "Technology", "Other"
     ]
 
 countries = [
     "Afghanistan",
-    "Åland Islands",
     "Albania",
     "Algeria",
-    "American Samoa",
     "Andorra",
     "Angola",
-    "Anguilla",
-    "Antarctica",
-    "Antigua and Barbuda",
     "Argentina",
     "Armenia",
     "Aruba",
     "Australia",
     "Austria",
     "Azerbaijan",
-    "Bahamas",
     "Bahrain",
     "Bangladesh",
     "Barbados",
@@ -46,34 +93,23 @@ countries = [
     "Bolivia",
     "Bosnia and Herzegovina",
     "Botswana",
-    "Bouvet Island",
     "Brazil",
-    "British Indian Ocean Territory",
-    "British Virgin Islands",
     "Brunei",
     "Bulgaria",
     "Burkina Faso",
     "Burundi",
-    "Cabo Verde",
     "Cambodia",
     "Cameroon",
     "Canada",
-    "Caribbean Netherlands",
-    "Cayman Islands",
     "Central African Republic",
     "Chad",
     "Chile",
     "China",
-    "Christmas Island",
-    "Cocos (Keeling) Islands",
     "Colombia",
-    "Comoros",
     "Congo Republic",
-    "Cook Islands",
     "Costa Rica",
     "Croatia",
     "Cuba",
-    "Curaçao",
     "Cyprus",
     "Czechia",
     "Denmark",
@@ -87,16 +123,10 @@ countries = [
     "Equatorial Guinea",
     "Eritrea",
     "Estonia",
-    "Eswatini",
     "Ethiopia",
-    "Falkland Islands",
-    "Faroe Islands",
     "Fiji",
     "Finland",
     "France",
-    "French Guiana",
-    "French Polynesia",
-    "French Southern Territories",
     "Gabon",
     "Gambia",
     "Georgia",
@@ -104,17 +134,10 @@ countries = [
     "Ghana",
     "Gibraltar",
     "Greece",
-    "Greenland",
-    "Grenada",
-    "Guadeloupe",
-    "Guam",
     "Guatemala",
-    "Guernsey",
     "Guinea",
-    "Guinea-Bissau",
     "Guyana",
     "Haiti",
-    "Heard Island and McDonald Islands",
     "Honduras",
     "Hong Kong",
     "Hungary",
@@ -124,47 +147,27 @@ countries = [
     "Iran",
     "Iraq",
     "Ireland",
-    "Isle of Man",
     "Italy",
     "Ivory Coast",
     "Jamaica",
     "Japan",
-    "Jersey",
-    "Jordan",
     "Kazakhstan",
     "Kenya",
-    "Kiribati",
     "Kosovo",
     "Kuwait",
     "Kyrgyzstan",
     "Laos",
-    "Latvia",
-    "Lebanon",
-    "Lesotho",
-    "Liberia",
     "Libya",
-    "Liechtenstein",
     "Lithuania",
     "Luxembourg",
-    "Macao",
     "Madagascar",
     "Malawi",
     "Malaysia",
-    "Maldives",
     "Mali",
     "Malta",
-    "Marshall Islands",
-    "Martinique",
-    "Mauritania",
-    "Mauritius",
-    "Mayotte",
     "Mexico",
-    "Micronesia",
-    "Moldova",
     "Monaco",
     "Mongolia",
-    "Montenegro",
-    "Montserrat",
     "Morocco",
     "Mozambique",
     "Myanmar",
@@ -172,17 +175,12 @@ countries = [
     "Nauru",
     "Nepal",
     "Netherlands",
-    "Netherlands Antilles",
     "New Caledonia",
     "New Zealand",
     "Nicaragua",
     "Niger",
     "Nigeria",
-    "Niue",
-    "Norfolk Island",
     "North Korea",
-    "North Macedonia",
-    "Northern Mariana Islands",
     "Norway",
     "Oman",
     "Pakistan",
@@ -193,64 +191,40 @@ countries = [
     "Paraguay",
     "Peru",
     "Philippines",
-    "Pitcairn Islands",
     "Poland",
     "Portugal",
     "Puerto Rico",
     "Qatar",
-    "Réunion",
     "Romania",
     "Russia",
     "Rwanda",
-    "Saint Barthélemy",
-    "Saint Helena",
-    "Saint Kitts and Nevis",
-    "Saint Lucia",
-    "Saint Martin",
-    "Saint Pierre and Miquelon",
-    "Saint Vincent and the Grenadines",
     "Samoa",
     "San Marino",
-    "São Tomé and Príncipe",
     "Saudi Arabia",
     "Senegal",
     "Serbia",
-    "Seychelles",
-    "Sierra Leone",
     "Singapore",
-    "Sint Maarten",
     "Slovakia",
     "Slovenia",
-    "Solomon Islands",
     "Somalia",
     "South Africa",
-    "South Georgia and South Sandwich Islands",
     "South Korea",
     "South Sudan",
     "Spain",
     "Sri Lanka",
     "Sudan",
     "Suriname",
-    "Svalbard and Jan Mayen",
     "Sweden",
     "Switzerland",
     "Syria",
     "Taiwan",
     "Tajikistan",
-    "Tanzania",
     "Thailand",
-    "Timor-Leste",
     "Togo",
-    "Tokelau",
     "Tonga",
-    "Trinidad and Tobago",
     "Tunisia",
     "Turkey",
     "Turkmenistan",
-    "Turks and Caicos Islands",
-    "Tuvalu",
-    "U.S. Minor Outlying Islands",
-    "U.S. Virgin Islands",
     "Uganda",
     "Ukraine",
     "United Arab Emirates",
@@ -258,11 +232,8 @@ countries = [
     "United States of America",
     "Uruguay",
     "Uzbekistan",
-    "Vanuatu",
-    "Vatican City",
     "Venezuela",
     "Vietnam",
-    "Wallis and Futuna",
     "Western Sahara",
     "Yemen",
     "Zambia",

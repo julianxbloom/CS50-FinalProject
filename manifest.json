@@ -1,16 +1,19 @@
 {
-    "name": "My PWA",
-    "short_name": "PWA",
+    "name": "Debate.",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",
-    "theme_color": "#317EFB",
-    "background_color": "#317EFB",
+    "prefer_related_applications": false,
     "icons": [
       {
-        "src": "static/icons/icon.png",
-        "sizes": "1024x1024",
+        "src": "static/icons/icon_512.png",
+        "sizes": "512x512",
         "type": "image/png"
-      } 
+      },
+      {
+        "src": "static/icons/icon_196.png",
+        "sizes": "196x196",
+        "type": "image/png"
+      }
     ]
   }
