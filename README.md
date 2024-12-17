@@ -9,7 +9,7 @@ The app is programmed using Python's [Flask](https://flask.palletsprojects.com/e
 <br><br>
 The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the following URL: https://www.julianxbloom.pythonanywhere.com/.
 <br><br>
-Its database is stored using MySQL, and the passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/) It is important to mention the app is designed for **Android devices** only.
+Its database is stored using MySQL, and the passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/). It is important to mention the app is designed for **Android devices** only.
 
 
 # Features
