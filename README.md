@@ -13,4 +13,5 @@ Users have the ability to:
   - live-chat with other users about a specific debate (programmed using [flask-socketio](https://flask-socketio.readthedocs.io/en/latest/), and adapted to Pythonanywhere using [this](https://help.pythonanywhere.com/pages/FlaskSocketIO/) help page)
   - join any debate they want (by scrolling in the main menu or searching for a debate)
 
-Moreover, this app is designed as a Progressive Web Application (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. For more information about PWA's, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
+Moreover, this app is designed as a Progressive Web Application (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. For more information about PWA's, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps).
+
