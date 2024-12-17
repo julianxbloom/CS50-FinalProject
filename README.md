@@ -11,8 +11,8 @@ The webapp is hosted on Pythonanywhere at the following URL: https://julianxbloo
 Users have the ability to:
 <br>
 <li>
-  <ul>- create new debates</ul>
-  <ul>- live-chat with other users about a specific debate (programmed using [flask-socketio](https://flask-socketio.readthedocs.io/en/latest/), and adapted to Pythonanywhere using [this](https://help.pythonanywhere.com/pages/FlaskSocketIO/) help page)</ul>
+  <ul>- create new debates
+  - live-chat with other users about a specific debate (programmed using [flask-socketio](https://flask-socketio.readthedocs.io/en/latest/), and adapted to Pythonanywhere using [this](https://help.pythonanywhere.com/pages/FlaskSocketIO/) help page)</ul>
   <ul>- join any debate they want (by scrolling in the main menu or searching for a debate)</ul>
 </li>
 
