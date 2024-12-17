@@ -1,5 +1,9 @@
-flask
+flask==1.0.3
 flask_session
 flask_socketio
+Jinja2==2.11.2
+markupsafe==2.0.1
+itsdangerous==2.0.1
 waitress
-argon2 #vérifier si c'est bien argon2 ou argon2-cffi
+argon2-cffi==20.1.0
+mysql-connector-python
