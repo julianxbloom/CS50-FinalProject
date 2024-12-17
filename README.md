@@ -6,4 +6,4 @@
 It will only be availaible on Android devices.
 
 The app is programmed using Python's [Flask](https://flask.palletsprojects.com/en/) library for the server side, and HTML/CSS/Javascript for the client side. It is worth noticing the use of [Bootstrap](https://getbootstrap.com/) in add to the css code.
-The database is stored using SQLite.
+The webapp is hosted on Pythonanywhere, and its database is stored using MySQL.
