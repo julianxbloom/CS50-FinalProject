@@ -20,15 +20,6 @@ debateLocalities = countries
 bug_categories = bug_categories
 
 
-
-#mydb = mysql.connector.connect(
-#  host="julianxbloom.mysql.pythonanywhere-services.com",
-#  user="julianxbloom",
-#  password="my_password",
-#  database="julianxbloom$debate",
-#)
-
-
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
