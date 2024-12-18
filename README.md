@@ -33,9 +33,11 @@ The conversations are ruled around **Trust Score**: a rate out of a hundread tha
 The debaters are able to report the others throught their profile page, a report that will be count as valid after having being read by an administrator of the app. Indeed, adminstrators can use the programmed administration console to manage users. It gives them the ability to proceed bugs and reports, to access users' chat history and to ban users. Look at [admin.py](https://github.com/julianxbloom/CS50-FinalProject/blob/main/admin.py) file for more information about the console's features.
 
 # PWA
-Moreover, this app is designed as a **Progressive Web Application** (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. To do this, as with Flask's specific architecture, PWAs need two specific files: a json manifest ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/manifest.json)) and a service worker ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/sw.js))
+Moreover, this app is designed as a **Progressive Web Application** (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. To do this, as with Flask's specific architecture, PWAs need two specific files: a json manifest ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/manifest.json)) and a service worker coded in javascript ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/sw.js)).
 
-For more information about PWA's, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps).
+The manifest contains data about the app itself such as its name, paths to the icons that will be displayed on the phone menu and the scope of the PWA: the "default" place we should be sent to when launching the app. While on its side, the service worker's job is to ensure the app will be launchable even if the user is not connected to Internet, or if the web server is currently not working. It does so by storing part of the webapp in a dedicated cache.
+
+For more information about PWAs, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps).
 
 
 # Bug feedback
