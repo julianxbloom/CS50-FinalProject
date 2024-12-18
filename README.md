@@ -44,6 +44,5 @@ For more information about PWAs, look at [this link](https://developer.mozilla.o
 
 
 # Bug feedback
-
-In the app's settings, users are able to provide a feedback to the developers, a good help to spot unexpected bugs...
+To me, it is really important to get feedback from the users of my webapp. To this extent, I added the possibility for the users to provide a feedback, througth the "Bug Feedback" page, found in the app's settings. More than being only a way to discover new bugs, it can also be a way to communicate with the users and find ways to improve their experience on the app.
 
