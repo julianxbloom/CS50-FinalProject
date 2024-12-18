@@ -16,7 +16,9 @@ Data about the users is stored in this database, as well as data about every spe
 
 It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module which mainly offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues, and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
 
-Lastly, it is important to mention the app is designed for **Android devices** only.
+At last, if you take a look at requirements.txt, you will realize I used specific versions of several libraries. In fact, combining such an amount of different python libraries between them and with the web host required an important work of library version coordination. As an example, some libraries don't interact well with others since a version X of the library, so it is necessary to use past versions of one of the two librabies (or both) to be able to make them interact one to another.
+
+WATCH OUT! It is important to mention the app is designed for **Android devices** only.
 
 
 # Features
