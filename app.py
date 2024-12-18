@@ -1,5 +1,5 @@
 import mysql.connector
-from datetime import timedelta
+import datetime
 from flask import Flask, render_template, redirect, send_file, jsonify, request, session
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send
@@ -8,7 +8,7 @@ from helpers import login_required, get_data, hash_password, verify_password, co
 app = Flask(__name__)
 
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(weeks=4)
+app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(weeks=4)
 Session(app)
 
 async_mode = None
@@ -25,21 +25,23 @@ bug_categories = bug_categories
 def index():
 
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
 
-        cur.execute("SELECT debate_id FROM participants WHERE user_id=%s", (session.get("user_id"),))
+        cur.execute("SELECT debate_id FROM participants WHERE user_id=%s",
+                    (session.get("user_id"),))
         data = cur.fetchall()
         participating = tuple([i[0] for i in data])
 
         try:
             if len(participating) > 1:
-                query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>%s AND id NOT IN {} LIMIT 50".format(participating)
+                query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>%s AND id NOT IN {} LIMIT 50".format(
+                    participating)
                 cur.execute(query, (session.get("user_id"),))
             elif len(participating) == 1:
                 query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>%s AND id<>%s LIMIT 50"
@@ -60,14 +62,15 @@ def index():
             cur.execute("SELECT COUNT(id) FROM participants WHERE debate_id=%s", (data[i][0],))
             participants = cur.fetchall()[0][0]
 
-            debates.append({"id": data[i][0], "text": data[i][2], "topic": data[i][3], "creator": username, "locality": data[i][4], "participants": participants})
+            debates.append({"id": data[i][0], "text": data[i][2], "topic": data[i][3],
+                           "creator": username, "locality": data[i][4], "participants": participants})
 
         cur.close()
 
     return render_template("index.html", debates=debates)
 
 
-@app.route("/data-update") #TO UPDATE
+@app.route("/data-update")
 @login_required
 def data_update():
     past_debates = eval(request.args.get("debates"))
@@ -88,25 +91,39 @@ def login():
             return render_template("login.html", error="You have to enter both your username and your password to log in.")
 
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
 
             cur.execute("SELECT id, hash FROM users WHERE username=%s", (username,))
             try:
                 data = cur.fetchall()[0]
+                user_id = data[0]
             except IndexError:
                 return render_template("login.html", error="Username does not exist.")
             if not verify_password(hash=data[1], password=password):
                 return render_template("login.html", error="Wrong password.")
 
+            cur.execute("SELECT ban_begin, d_days FROM bans WHERE user_id=%s", (user_id,))
+            data = cur.fetchall()
+            print(data)
+            if data != []:
+                ban_begin, ban_duration = data[0][0], data[0][1]
+                ban_end = ban_begin + datetime.timedelta(days=ban_duration)
+
+                if ban_end < datetime.datetime.now():
+                    cur.execute("UPDATE users SET trust_score=30 WHERE user_id=%s", (user_id,))
+                    cur.execute("DELETE FROM bans WHERE user_id=%s", (user_id,))
+                else:
+                    return render_template("login.html", error="Banned user.")
+
             cur.close()
 
-        session["user_id"] = data[0]
+        session["user_id"] = user_id
         session["username"] = username
 
         return redirect("/")
@@ -139,16 +156,17 @@ def register():
         hashed_password = hash_password(password=password)
 
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
 
             try:
-                cur.execute("INSERT INTO users (username, hash, locality) VALUES(%s,%s,%s)", (username, hashed_password, country))
+                cur.execute("INSERT INTO users (username, hash, locality) VALUES(%s,%s,%s)",
+                            (username, hashed_password, country))
             except:
                 return render_template("register.html", countries=countries, error="Username already exists.")
 
@@ -158,8 +176,6 @@ def register():
         return redirect("/login")
     else:
         return render_template("register.html", countries=countries)
-
-
 
 
 @app.route("/logout")
@@ -173,45 +189,49 @@ def logout():
 @login_required
 def search():
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
-        cur.execute("SELECT debate_id, COUNT(*) FROM participants GROUP BY debate_id ORDER BY COUNT(*) DESC LIMIT 8")
+        cur.execute(
+            "SELECT debate_id, COUNT(*) FROM participants GROUP BY debate_id ORDER BY COUNT(*) DESC LIMIT 8")
         data = cur.fetchall()
 
         popular_debates = []
         n = len(data)
         for i in range(n):
 
-            cur.execute("SELECT debateText, debateTopic, locality FROM debates WHERE id=%s", (data[i][0],))
+            cur.execute(
+                "SELECT debateText, debateTopic, locality FROM debates WHERE id=%s", (data[i][0],))
             debate_infos = cur.fetchall()
             print(debate_infos)
 
-            popular_debates.append({'debate_id': data[i][0],'participants': data[i][1], 'debateText': debate_infos[0][0], 'debateTopic': debate_infos[0][1], 'locality': debate_infos[0][2]})
+            popular_debates.append({'debate_id': data[i][0], 'participants': data[i][1], 'debateText': debate_infos[0]
+                                   [0], 'debateTopic': debate_infos[0][1], 'locality': debate_infos[0][2]})
 
         cur.close()
 
     return render_template("search.html", popular_debates=popular_debates)
 
 
-@app.route("/query")  #search query
+@app.route("/query")  # search query
 @login_required
 def query():
     query = request.args.get("q")
     if query:
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
-            cur.execute("SELECT id, debateText, debateTopic, locality FROM debates WHERE debateText LIKE %s", ('%' + query + '%',))
+            cur.execute(
+                "SELECT id, debateText, debateTopic, locality FROM debates WHERE debateText LIKE %s", ('%' + query + '%',))
             results = cur.fetchall()
             cur.close()
     else:
@@ -237,14 +257,15 @@ def create():
             return render_template("create.html", debateTopics=debateTopics, debateLocalities=debateLocalities, error="You must precise a geographic scale for your debate.", teaser=debateText)
 
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
-            cur.execute("INSERT INTO debates (user_id, debateText, debateTopic, locality) VALUES(%s,%s,%s,%s)", (session.get('user_id'), debateText, debateTopic, debateLocality))
+            cur.execute("INSERT INTO debates (user_id, debateText, debateTopic, locality) VALUES(%s,%s,%s,%s)",
+                        (session.get('user_id'), debateText, debateTopic, debateLocality))
             mydb.commit()
             cur.close()
 
@@ -257,14 +278,15 @@ def create():
 @login_required
 def myDebates():
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
-        cur.execute("SELECT debate_id FROM participants WHERE user_id=%s", (session.get("user_id"),))
+        cur.execute("SELECT debate_id FROM participants WHERE user_id=%s",
+                    (session.get("user_id"),))
         data = cur.fetchall()
 
         debates = []
@@ -273,7 +295,8 @@ def myDebates():
             debate_id = data[i][0]
             cur.execute("SELECT debateText, debateTopic, locality FROM debates WHERE id=%s", (debate_id,))
             tmp = cur.fetchall()
-            debates.append({"id": debate_id, "text": tmp[0][0], "topic": tmp[0][1], "locality": tmp[0][2]})
+            debates.append(
+                {"id": debate_id, "text": tmp[0][0], "topic": tmp[0][1], "locality": tmp[0][2]})
 
         cur.close()
 
@@ -287,11 +310,11 @@ def chat():
     if not query:
         return redirect("/")
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
 
@@ -304,14 +327,15 @@ def chat():
 
         session['room_id'] = query
 
-
         cur.execute("SELECT username FROM users WHERE id=%s", (data[1],))
         creator = cur.fetchall()[0][0]
 
-        cur.execute("SELECT * FROM participants WHERE debate_id=%s AND user_id=%s", (query, session["user_id"]))
+        cur.execute("SELECT * FROM participants WHERE debate_id=%s AND user_id=%s",
+                    (query, session["user_id"]))
         data = cur.fetchall()
         if data == []:
-            cur.execute("INSERT INTO participants (debate_id, user_id) VALUES(%s,%s)", (query, session["user_id"]))
+            cur.execute("INSERT INTO participants (debate_id, user_id) VALUES(%s,%s)",
+                        (query, session["user_id"]))
             mydb.commit()
 
         cur.execute("SELECT user_id, message, time FROM chats WHERE debate_id = %s", (query,))
@@ -321,20 +345,21 @@ def chat():
         senders = []
         n = len(sender_ids)
         for i in range(n):
-            if sender_ids[i] == 0:
+            if sender_ids[i] == 1:
                 sender = "deleted user"
             else:
-                cur.execute("SELECT username FROM users WHERE id=%s",(sender_ids[i],))
+                cur.execute("SELECT username FROM users WHERE id=%s", (sender_ids[i],))
                 sender = cur.fetchall()[0][0]
             senders.append(sender)
 
         chats = []
         for i in range(n):
-            chats.append({'sender_id': chat_data[i][0], 'sender': senders[i], 'message': chat_data[i][1]}) #maybe add time too?
+            chats.append({'sender_id': chat_data[i][0],
+                         'sender': senders[i], 'message': chat_data[i][1]})
 
         cur.close()
 
-    return render_template("chat.html",chats=chats, room_id=query, debate_creator=creator, debate_text=text, username =session.get("username"))
+    return render_template("chat.html", chats=chats, room_id=query, debate_creator=creator, debate_text=text, username=session.get("username"))
 
 
 @app.route("/profile")
@@ -347,11 +372,11 @@ def profile():
         return render_template("deleted-profile.html")
 
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
 
@@ -360,17 +385,19 @@ def profile():
         user_id = data[0][0]
         trust_score = data[0][1]
 
-        cur.execute("SELECT id, debateText, debateTopic, locality FROM debates WHERE user_id=%s", (user_id,))
+        cur.execute(
+            "SELECT id, debateText, debateTopic, locality FROM debates WHERE user_id=%s", (user_id,))
         data = cur.fetchall()
 
         debates = []
         n = len(data)
         for i in range(n):
-            debates.append({"id": data[i][0], "text": data[i][1], "topic": data[i][2], "locality": data[i][3]})
+            debates.append({"id": data[i][0], "text": data[i][1],
+                           "topic": data[i][2], "locality": data[i][3]})
 
         cur.close()
 
-    return render_template("profile.html", debates=debates, debate_length = len(debates) ,username=username, trust_score=trust_score, session_username=session.get("username"))
+    return render_template("profile.html", debates=debates, debate_length=len(debates), username=username, trust_score=trust_score, session_username=session.get("username"))
 
 
 @app.route("/settings")
@@ -390,18 +417,19 @@ def bug_feedback():
             return render_template("bug-feedback.html", bug_categories=bug_categories, bug_description="", error="You must describe the bug you want to give us feedback about!")
         elif len(bug_description) > 2000:
             return render_template("bug-feedback.html", bug_categories=bug_categories, bug_description=bug_description, error="Your bug report seems to be a bit too long..")
-        elif  bug_category not in bug_categories:
+        elif bug_category not in bug_categories:
             return render_template("bug-feedback.html", bug_categories=bug_categories, bug_description=bug_description, error="You must select a valid bug category.")
 
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
-            cur.execute("INSERT INTO bugs (category, description, bug_finder_id) VALUES (%s,%s,%s)", (bug_category, bug_description, session.get("user_id")))
+            cur.execute("INSERT INTO bugs (category, description, bug_finder_id) VALUES (%s,%s,%s)",
+                        (bug_category, bug_description, session.get("user_id")))
             mydb.commit()
 
             cur.close()
@@ -433,18 +461,19 @@ def report():
         reporting_user_id = session.get("user_id")
 
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
 
             cur.execute("SELECT id FROM users WHERE username=%s", (user_to_report,))
             reported_user_id = cur.fetchall()[0][0]
 
-            cur.execute("INSERT INTO reports (reported_user_id, reporting_user_id, text) VALUES (%s,%s,%s)", (reported_user_id, reporting_user_id, text))
+            cur.execute("INSERT INTO reports (reported_user_id, reporting_user_id, text) VALUES (%s,%s,%s)",
+                        (reported_user_id, reporting_user_id, text))
             mydb.commit()
 
             cur.close()
@@ -453,7 +482,7 @@ def report():
     return render_template("report.html", user_to_report=request.args.get("username"))
 
 
-@app.route("/delete") #deleting debate
+@app.route("/delete")  # deleting debate
 @login_required
 def delete():
     to_delete = request.args.get("debate_id")
@@ -461,11 +490,11 @@ def delete():
         return redirect("/")
 
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
 
@@ -481,7 +510,8 @@ def delete():
             return redirect("/profile")
 
         else:
-            cur.execute("DELETE FROM participants WHERE debate_id=%s AND user_id=%s", (to_delete, session.get('user_id')))
+            cur.execute("DELETE FROM participants WHERE debate_id=%s AND user_id=%s",
+                        (to_delete, session.get('user_id')))
             mydb.commit()
             cur.close()
             return redirect("/active-debates")
@@ -492,17 +522,17 @@ def delete():
 def del_account():
     if request.method == 'POST':
         with mysql.connector.connect(
-                        host="julianxbloom.mysql.pythonanywhere-services.com",
-                        user="julianxbloom",
-                        password="my_password",
-                        database="julianxbloom$debate",
-                        ) as mydb:
+            host="julianxbloom.mysql.pythonanywhere-services.com",
+            user="julianxbloom",
+            password="my_password",
+            database="julianxbloom$debate",
+        ) as mydb:
 
             cur = mydb.cursor()
 
             user_id = session.get('user_id')
 
-            cur.execute("UPDATE chats SET user_id=? WHERE user_id=%s", (0, user_id))
+            cur.execute("UPDATE chats SET user_id=%s WHERE user_id=%s", (1, user_id))
             cur.execute("DELETE FROM participants WHERE user_id=%s", (user_id,))
             cur.execute("DELETE FROM debates WHERE user_id=%s", (user_id,))
             cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
@@ -516,18 +546,14 @@ def del_account():
         return render_template("del-confirm.html")
 
 
-
-
-@app.route("/manifest.json")  #admin required?
+@app.route("/manifest.json")
 def serve_manifest():
     return send_file("manifest.json", mimetype="application/manifest+json")
 
 
-@app.route("/sw.js")  #admin required?
+@app.route("/sw.js")
 def serve_sw():
     return send_file("sw.js", mimetype="application/javascript")
-
-
 
 
 @socketio.on('connect')
@@ -547,18 +573,19 @@ def handle_message(data):
 
     message = {
         'sender': session.get("username"),
-        'message':data['message']
+        'message': data['message']
     }
 
     with mysql.connector.connect(
-                    host="julianxbloom.mysql.pythonanywhere-services.com",
-                    user="julianxbloom",
-                    password="my_password",
-                    database="julianxbloom$debate",
-                    ) as mydb:
+        host="julianxbloom.mysql.pythonanywhere-services.com",
+        user="julianxbloom",
+        password="my_password",
+        database="julianxbloom$debate",
+    ) as mydb:
 
         cur = mydb.cursor()
-        cur.execute("INSERT INTO chats (debate_id, user_id, message) VALUES(%s,%s,%s)", (room_id, session.get("user_id"), message['message']))
+        cur.execute("INSERT INTO chats (debate_id, user_id, message) VALUES(%s,%s,%s)",
+                    (room_id, session.get("user_id"), message['message']))
         mydb.commit()
         cur.close()
 
@@ -569,6 +596,7 @@ def handle_message(data):
 def handle_disconnect():
     room_id = session.get('room_id')
     leave_room(room_id)
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, port=8080)
