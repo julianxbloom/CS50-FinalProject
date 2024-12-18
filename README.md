@@ -9,7 +9,7 @@ The app is programmed using Python's [Flask](https://flask.palletsprojects.com/e
 <br><br>
 The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the following URL: https://www.julianxbloom.pythonanywhere.com/. It is an online web hosting service, but it also contains a MySQL server on which I was able to host the app's database.
 <br><br>
-Data about the users is stored in this database, as well as data about every specific debate and even more: here is the relational diagram of **Debate.'s** database:
+Data about the users is stored in this database, as well as data about every specific debate and even more: here is the relational diagram of **Debate.**'s database:
 
 ![database diagram](database_diagram.png)
 
