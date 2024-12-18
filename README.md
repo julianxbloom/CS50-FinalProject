@@ -24,17 +24,18 @@ Users have the ability to:
 <ul>
   <li><b>create</b> new debates: they can decide of the debate's hook, its topic and eventually its locality.</li>
   <li><b>live-chat</b> with other users about a specific debate: programmed using <a href="https://flask-socketio.readthedocs.io/en/latest/">flask-socketio</a>, and adapted to Pythonanywhere using <a href="https://help.pythonanywhere.com/pages/FlaskSocketIO/">this</a> help page, live-chatting allows users to connect with each other.</li>
-  <li><b>join</b> any debate they want (by scrolling in the main menu or searching for a debate)</li>
+  <li><b>join</b> any debate they want: in the main menu, users can scroll throught the others' debates. Moreover, they can search for a specific debate or topic using the searching interface. The latter also displays most popular debates. </li>
 </ul>
 
 ## Moderation
-The conversations are ruled around **Trust Score**: a rate out of a hundread that is meant to reflect the user's good or bad behaviour on the app (a low Trust Score will lead to a temporary ban from Debate). This score is accessible throught any user's profile page, as well as details about the sanctions that can be encoutered.
+The conversations are ruled around **Trust Score**: a rate out of a hundread that is meant to reflect the user's good or bad behaviour on the app. This score is accessible throught any user's profile page, as well as details about the sanctions that can be encoutered: in brief, low Trust Score will lead to a temporary ban from Debate.
 <br><br>
 The debaters are able to report the others throught their profile page, a report that will be count as valid after having being read by an administrator of the app. Indeed, adminstrators can use the programmed administration console to manage users. It gives them the ability to proceed bugs and reports, to access users' chat history and to ban users. Look at [admin.py](https://github.com/julianxbloom/CS50-FinalProject/blob/main/admin.py) file for more information about the console's features.
 
 # PWA
+Moreover, this app is designed as a **Progressive Web Application** (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. To do this, as with Flask's specific architecture, PWAs need two specific files: a json manifest ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/manifest.json)) and a service worker ([here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/sw.js))
 
-Moreover, this app is designed as a **Progressive Web Application** (also know as PWA). This means it can be downloaded from your web browser directly to your phone. It will then appear as any other application. For more information about PWA's, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps).
+For more information about PWA's, look at [this link](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps).
 
 
 # Bug feedback
