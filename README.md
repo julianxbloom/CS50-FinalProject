@@ -24,7 +24,7 @@ Users have the ability to:
 ## Moderation
 The conversations are ruled around **Trust Score**: a rate out of a hundread that is meant to reflect the user's good or bad behaviour on the app (a low Trust Score will lead to a temporary ban from Debate). This score is accessible throught any user's profile page, as well as details about the sanctions that can be encoutered.
 <br><br>
-The debaters are able to report the others throught their profile page, a report that will be count as valid after having being read by an administrator of the app (throught the MySQL console).
+The debaters are able to report the others throught their profile page, a report that will be count as valid after having being read by an administrator of the app. Indeed, adminstrators can use the programmed administration console to manage users. It gives them the ability to proceed bugs and reports, to access users' chat history and to ban users. Look at [admin.py](https://github.com/julianxbloom/CS50-FinalProject/blob/main/admin.py) file for more information about the console's features.
 
 # PWA
 
