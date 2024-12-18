@@ -5,25 +5,31 @@
 
 # Libraries and external tools used
 
+## Framework
 The app is programmed using Python's [Flask](https://flask.palletsprojects.com/en/) library for the server side, and HTML, CSS and Javascript for the client side. To that extent, the project has to fit with Flask's required file architecture: a app.py file ([accessible here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/app.py)), containing the several routes users can go througth when using the app, a static folder, containing all icons displayed in the app and a templates folder, where the html templates for each route are stored. In add to these files, I separated from functions and variables from app.py, and put them in helpers.py (have a look at the code clicking [here](https://github.com/julianxbloom/CS50-FinalProject/blob/main/helpers.py)). It helps lighten the main file of the webapp, insomuch as the list containing localities is really long. 
 Likewise, it is worth noticing the use of [Bootstrap](https://getbootstrap.com/) in add to self-written css stylesheets.
-<br><br>
+
+## Web hosting
 The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the following URL: https://www.julianxbloom.pythonanywhere.com/. It is an online web hosting service. This web host was not my first choice, as I began an implementation on Microsoft Azure (Microsoft's cloud services). But the complexity of Azure, being used for a lot of different activities, made it very hard to manage a "simple" web application. On the contrary, Pythonanywhere has a more user-friendly interface and focuses only on webapplications, which made it easier for me to implement my app on this host.
-<br><br>
+
+## Database
 Data about the users is stored in a database, as well as data about every specific debate and even more. This database is stored on Pythonanywhere too, and managed by MySQL, a database management system that is quite similar to sqlite. 
 <br><br>
 Here is the relational diagram of **Debate.**'s database:
 
 ![database diagram](database_diagram.png)
 
+## Password hashing
 It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module that, in short, offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues, and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
 
+## Other
 At last, if you take a look at requirements.txt, you will realize I used specific versions of several libraries. In fact, combining such an amount of different python libraries between them and with the web host required an important work of library version coordination. As an example, some libraries don't interact well with others since a version X of the library, so it is necessary to use past versions of one of the two librabies (or both) to be able to make them interact one to another.
 
 WATCH OUT! It is important to mention the app is designed for **Android devices** only.
 
 
 # Features
+
 ## Fundamentals
 Users have the ability to:
 <ul>
