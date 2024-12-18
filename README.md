@@ -13,7 +13,7 @@ Data about the users is stored in this database, as well as data about every spe
 
 ![database diagram](database_diagram.png)
 
-It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module which mainly offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues; and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
+It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module which mainly offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues, and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
 
 Lastly, it is important to mention the app is designed for **Android devices** only.
 
@@ -22,8 +22,8 @@ Lastly, it is important to mention the app is designed for **Android devices** o
 ## Fundamentals
 Users have the ability to:
 <ul>
-  <li><b>create</b> new debates</li>
-  <li><b>live-chat</b> with other users about a specific debate (programmed using <a href="https://flask-socketio.readthedocs.io/en/latest/">flask-socketio</a>, and adapted to Pythonanywhere using <a href="https://help.pythonanywhere.com/pages/FlaskSocketIO/">this</a> help page)</li>
+  <li><b>create</b> new debates: they can decide of the debate's hook, its topic and eventually its locality.</li>
+  <li><b>live-chat</b> with other users about a specific debate: programmed using <a href="https://flask-socketio.readthedocs.io/en/latest/">flask-socketio</a>, and adapted to Pythonanywhere using <a href="https://help.pythonanywhere.com/pages/FlaskSocketIO/">this</a> help page, live-chatting allows users to connect with each other.</li>
   <li><b>join</b> any debate they want (by scrolling in the main menu or searching for a debate)</li>
 </ul>
 
