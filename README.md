@@ -5,15 +5,15 @@
 
 # Libraries and external tools used
 
-The app is programmed using Python's [Flask](https://flask.palletsprojects.com/en/) library for the server side, and HTML/CSS/Javascript for the client side. It is worth noticing the use of [Bootstrap](https://getbootstrap.com/) in add to the css code.
+The app is programmed using Python's [Flask](https://flask.palletsprojects.com/en/) library for the server side, and HTML, CSS and Javascript for the client side. It is worth noticing the use of [Bootstrap](https://getbootstrap.com/) in add to self-written css stylesheets.
 <br><br>
 The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the following URL: https://www.julianxbloom.pythonanywhere.com/. It is an online web hosting service, but it also contains a MySQL server on which I was able to host the app's database.
 <br><br>
-Data about the users is stored in this database, as well as data about every specific debate and even more: here is the relational diagram of **Debate.**'s database:
+Data about the users is stored in this database, as well as data about every specific debate and even more. Here is the relational diagram of **Debate.**'s database:
 
 ![database diagram](database_diagram.png)
 
-It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/). 
+It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module which mainly offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues; and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
 
 Lastly, it is important to mention the app is designed for **Android devices** only.
 
