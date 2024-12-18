@@ -10,8 +10,8 @@ Likewise, it is worth noticing the use of [Bootstrap](https://getbootstrap.com/)
 <br><br>
 The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the following URL: https://www.julianxbloom.pythonanywhere.com/. It is an online web hosting service. This web host was not my first choice, as I began an implementation on Microsoft Azure (Microsoft's cloud services). But the complexity of Azure, being used for a lot of different activities, made it very hard to manage a "simple" web application. On the contrary, Pythonanywhere has a more user-friendly interface and focuses only on webapplications, which made it easier for me to implement my app on this host.
 <br><br>
-but it also contains a MySQL server on which I was able to host the app's database. 
-Data about the users is stored in a database, as well as data about every specific debate and even more. This database is stored on Pythonanywhere too, and managed by MySQL, a database management system that is quite similar to sqlite.
+Data about the users is stored in a database, as well as data about every specific debate and even more. This database is stored on Pythonanywhere too, and managed by MySQL, a database management system that is quite similar to sqlite. 
+<br>
 Here is the relational diagram of **Debate.**'s database:
 
 ![database diagram](database_diagram.png)
