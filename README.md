@@ -11,7 +11,7 @@ The webapp is hosted on [Pythonanywhere](https://www.pythonanywhere.com/) at the
 <br><br>
 Data about the users is stored in this database, as well as data about every specific debate and even more: here is the relational diagram of Debate.'s database:
 
-![database diagram](db_diagram.png)
+![database diagram](database_diagram.png)
 
 It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/). 
 
