@@ -22,6 +22,9 @@ Here is the relational diagram of **Debate.**'s database:
 ## Password hashing
 It is worth mentionning passwords are hashed using [Argon2 for Python](https://argon2-cffi.readthedocs.io/en/stable/), a module that, in short, offers a hashing function and another to compare a given password to the hash produced previously. I tried to make the hashing function myself, but I quickly realized the importance of security issues, and my lack of knowledge in cryptography and cybersecurity in general pushed me to select an existant hashing algorithm I can trust.
 
+## Cookies
+The webapp uses cookies (using [flask-session](https://flask-session.readthedocs.io/en/latest/) to improve user-interface. It allows users not to have to write their username and password again each time they open the app.
+
 ## Other
 At last, if you take a look at requirements.txt, you will realize I used specific versions of several libraries. In fact, combining such an amount of different python libraries between them and with the web host required an important work of library version coordination. As an example, some libraries don't interact well with others since a version X of the library, so it is necessary to use past versions of one of the two librabies (or both) to be able to make them interact one to another.
 
