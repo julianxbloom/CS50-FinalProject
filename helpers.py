@@ -83,6 +83,7 @@ countries = [
     "Africa",
     "Asia",
     "Europe",
+    "Middle East",
     "North America",
     "South America",
     "Oceania",
