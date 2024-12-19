@@ -12,7 +12,7 @@
         <select name="debateLocality" class="custom-select" style="margin-bottom: 5%; width: 60%; max-width: 300px;">
             <option selected disabled>Locality</option>
             {% for locality in debateLocalities %}
-                <option value={{locality}}>{{locality}}</option>
+                <option value="{{locality}}">{{locality}}</option>
             {% endfor %}
         </select>
         {% if teaser == "" %}
