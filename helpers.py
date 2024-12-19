@@ -1,4 +1,4 @@
-import sqlite3
+import mysql.connector
 from flask import redirect, session
 from functools import wraps
 import argon2
@@ -19,31 +19,39 @@ def login_required(f):
 
 def get_data(past_debates=[]) -> list[dict]:
     past_ids = tuple([debate['id'] for debate in past_debates])
-    
-    with sqlite3.connect("static/debate.db") as con:
-        cur = con.cursor()
-        
-        cur.execute("SELECT debate_id FROM participants WHERE user_id=?", [session["user_id"]])
+
+    with mysql.connector.connect(
+                    host="julianxbloom.mysql.pythonanywhere-services.com",
+                    user="julianxbloom",
+                    password="my_password",
+                    database="julianxbloom$debate",
+                    ) as mydb:
+
+        cur = mydb.cursor()
+
+        cur.execute("SELECT debate_id FROM participants WHERE user_id=%s", (session["user_id"],))
         data = cur.fetchall()
         participating = tuple([ele[0] for ele in data])
-        
+
         try:
-            query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>? AND id NOT IN {} AND id NOT IN {} LIMIT 50".format(past_ids, participating)
-            cur.execute(query, [session["user_id"]])
-        except sqlite3.OperationalError:
+            query = "SELECT id, user_id, debateText, debateTopic, locality FROM debates WHERE user_id<>%s AND id NOT IN {} AND id NOT IN {} LIMIT 50".format(past_ids, participating)
+            cur.execute(query, (session["user_id"],))
+        except:
             return []
         data = cur.fetchall()
-        
+
         debates = []
         n = len(data)
         for i in range(n):
-            cur.execute("SELECT username FROM users WHERE id=?", [data[i][1]])
+            cur.execute("SELECT username FROM users WHERE id=%s", (data[i][1],))
             username = cur.fetchall()[0][0]
 
-            cur.execute("SELECT COUNT(id) FROM participants WHERE debate_id=?", [data[i][0]])
+            cur.execute("SELECT COUNT(id) FROM participants WHERE debate_id=%s", (data[i][0],))
             participants = cur.fetchall()[0][0]
-            
+
             debates.append({"id": data[i][0], "text": data[i][2], "topic": data[i][3], "creator": username, "locality": data[i][4], "participants": participants})
+
+        cur.close()
 
     return debates
 
@@ -63,33 +71,35 @@ def verify_password(hash: str | bytes, password: str) -> bool:
 
     # Variables
 
-bug_categories = ['Debate scrolling', 'Search', 'Debate creation', 'Chatting', 'Profile / trust score', 'Other']
+bug_categories = [
+    'Debate scrolling', 'Search', 'Debate creation', 'Chatting', 'Profile / trust score', 'Other'
+    ]
 
 topics = [
-    "Politics", "Social", "Economics", "Education", "Health", "Technology", "Other"
+    "Politics", "Social", "Economics", "Education", "Health", "Technology", "Ecology", "Other"
     ]
 
 countries = [
+    "Africa",
+    "Asia",
+    "Europe",
+    "North America",
+    "South America",
+    "Oceania",
     "Afghanistan",
     "Albania",
     "Algeria",
-    "Andorra",
     "Angola",
     "Argentina",
     "Armenia",
-    "Aruba",
     "Australia",
     "Austria",
     "Azerbaijan",
     "Bahrain",
     "Bangladesh",
-    "Barbados",
     "Belarus",
     "Belgium",
-    "Belize",
     "Benin",
-    "Bermuda",
-    "Bhutan",
     "Bolivia",
     "Bosnia and Herzegovina",
     "Botswana",
@@ -113,10 +123,6 @@ countries = [
     "Cyprus",
     "Czechia",
     "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "DR Congo",
     "Ecuador",
     "Egypt",
     "El Salvador",
@@ -124,21 +130,17 @@ countries = [
     "Eritrea",
     "Estonia",
     "Ethiopia",
-    "Fiji",
     "Finland",
     "France",
     "Gabon",
-    "Gambia",
     "Georgia",
     "Germany",
     "Ghana",
-    "Gibraltar",
     "Greece",
     "Guatemala",
     "Guinea",
     "Guyana",
     "Haiti",
-    "Honduras",
     "Hong Kong",
     "Hungary",
     "Iceland",
@@ -166,13 +168,11 @@ countries = [
     "Mali",
     "Malta",
     "Mexico",
-    "Monaco",
     "Mongolia",
     "Morocco",
     "Mozambique",
     "Myanmar",
     "Namibia",
-    "Nauru",
     "Nepal",
     "Netherlands",
     "New Caledonia",
@@ -182,12 +182,9 @@ countries = [
     "Nigeria",
     "North Korea",
     "Norway",
-    "Oman",
     "Pakistan",
-    "Palau",
     "Palestine",
     "Panama",
-    "Papua New Guinea",
     "Paraguay",
     "Peru",
     "Philippines",
@@ -209,7 +206,6 @@ countries = [
     "Somalia",
     "South Africa",
     "South Korea",
-    "South Sudan",
     "Spain",
     "Sri Lanka",
     "Sudan",
@@ -220,8 +216,6 @@ countries = [
     "Taiwan",
     "Tajikistan",
     "Thailand",
-    "Togo",
-    "Tonga",
     "Tunisia",
     "Turkey",
     "Turkmenistan",
