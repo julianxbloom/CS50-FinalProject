@@ -150,6 +150,7 @@ countries = [
     "Iran",
     "Iraq",
     "Ireland",
+    "Israel",
     "Italy",
     "Ivory Coast",
     "Jamaica",
