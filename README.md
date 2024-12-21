@@ -1,5 +1,5 @@
 # DEBATE.
-### Video Presentation: TO ADD
+### Video Presentation: https://youtu.be/jGdKCixraI0
 
 **Debate.** is a social network that allows you to debate about any subject you want with anybody. You can set your own debate and wait for others to join it. Then, you can communicate with them throught a chat, ruled by **Trust Score**, a score that reflects debaters' behaviour.
 
