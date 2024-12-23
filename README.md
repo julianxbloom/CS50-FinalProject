@@ -57,3 +57,13 @@ For more information about PWAs, look at [this link](https://developer.mozilla.o
 # Bug feedback
 To me, it is really important to get feedback from the users of my webapp. To this extent, I added the possibility for the users to provide a feedback, througth the "Bug Feedback" page, found in the app's settings. More than being only a way to discover new bugs, it can also be a way to communicate with the users and find ways to improve their experience on the app.
 
+# To add later
+Here are some ideas I had but didn't have the time to develop:
+- Add the possibility to share debates or profiles
+- Add an anti-AI checker for the messages sent, as well as a message moderation system (with the possibility to instantly make the user loose Trust score)
+- Add the possibility for users to gain Trust score back when behaving well for a while
+- Add push notifications
+- Add the possibility to upload a profile picture
+- Add the possibility to choose a color for your debate
+- Add search filters on the searching interface
+- Add the possibility to delete debates from the user's profile or from the Active debates page (currently available only on the chat page)
